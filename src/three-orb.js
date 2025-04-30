@@ -148,7 +148,11 @@ export default class ThreeOrb {
 
   loadEnvironmentMap() {
     const textureLoader = new THREE.TextureLoader();
-    textureLoader.load("/src/bg-2.jpg", (texture) => {
+    
+    // Import the textures using relative paths or URL imports
+    import.meta.url; // This ensures Vite processes this file
+    
+    textureLoader.load(new URL('./bg-2.jpg', import.meta.url).href, (texture) => {
       texture.mapping = THREE.EquirectangularReflectionMapping;
       this.scene.environment = texture;
     });
