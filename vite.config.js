@@ -3,6 +3,8 @@ import { resolve } from 'path'
 
 export default defineConfig({
   base: '/epigroup-orb/',
+  publicDir: 'public',
+  root: './',
   build: {
     outDir: 'dist',
     assetsInlineLimit: 0,
@@ -17,7 +19,6 @@ export default defineConfig({
       }
     }
   },
-  publicDir: 'public',
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
