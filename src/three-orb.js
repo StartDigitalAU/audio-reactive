@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import MeshTransmissionMaterial from "./MeshTransmissionMaterial";
+import MeshTransmissionMaterial from "/src/MeshTransmissionMaterial";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 export default class ThreeOrb {
