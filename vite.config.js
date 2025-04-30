@@ -2,10 +2,10 @@ import { defineConfig } from 'vite'
 import { resolve } from 'path'
 
 export default defineConfig({
-  base: './',
+  base: '/epigroup-orb/',
   build: {
     outDir: 'dist',
-    assetsInlineLimit: 0, // Don't inline any assets
+    assetsInlineLimit: 0,
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
