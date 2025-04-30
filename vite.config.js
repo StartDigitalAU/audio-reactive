@@ -1,27 +1,34 @@
-import { defineConfig } from 'vite'
-import { resolve } from 'path'
+import { defineConfig } from "vite";
+import { resolve } from "path";
 
 export default defineConfig({
-  base: '/epigroup-orb/',
-  publicDir: 'public',
-  root: './',
+  base: "/epigroup-orb/",
+  publicDir: "public",
+  root: "./",
   build: {
-    outDir: 'dist',
-    assetsInlineLimit: 0,
+    outDir: "dist",
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
+        main: resolve(__dirname, "index.html"),
       },
       output: {
-        assetFileNames: 'assets/[name][extname]',
-        chunkFileNames: 'assets/[name].js',
-        entryFileNames: 'assets/[name].js'
-      }
-    }
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            return id
+              .toString()
+              .split("node_modules/")[1]
+              .split("/")[0]
+              .toString();
+          }
+          return null;
+        },
+      },
+    },
+    minify: "esbuild",
   },
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src'),
+      "@": resolve(__dirname, "src"),
     },
-  }
-})
+  },
+});
