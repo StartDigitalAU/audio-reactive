@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import { resolve } from "path";
 
 export default defineConfig({
-  base: "/epigroup-orb/",
+  base: "/audio-reactive/",
   publicDir: "public",
   root: "./",
   build: {
