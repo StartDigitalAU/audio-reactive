@@ -402,7 +402,7 @@ export default class ThreeOrb {
 			if (this.snareDecay > 0) {
 				this.snareDecay--;
 				trebleValue +=
-					this.lastSnareHit * Math.pow(this.snareDecay / 24, 0.6) * 0.2; // Slower decay, stronger effect
+					this.lastSnareHit * Math.pow(this.snareDecay / 24, 0.6) * 0.7; // Slower decay, stronger effect
 			}
 
 			// Decay the visual memory more slowly than the actual effect
@@ -452,10 +452,10 @@ export default class ThreeOrb {
 						0.04 *
 						Math.sin(time * 6 + (ox + oy + oz) * 3);
 
-					// // Add directional distortion based on mid frequencies - creates flowing movement
-					// const flowDirection = Math.sin(time * 0.4) * 0.5 + 0.5;
-					// warp +=
-					// 	midValue * 0.12 * Math.sin(flowDirection * 8 * ox + time * 1.5);
+					// Add directional distortion based on mid frequencies - creates flowing movement
+					const flowDirection = Math.sin(time * 0.4) * 0.5 + 0.5;
+					warp +=
+						midValue * 0.12 * Math.sin(flowDirection * 8 * ox + time * 1.5);
 
 					// Add subtle vertical pulse for bass
 					if (this.bassImpulseDecay > 15) {
@@ -497,26 +497,6 @@ export default class ThreeOrb {
 					// Apply audio reactivity to small orb - make it react to snares/claps
 					let warp = 0.025 * Math.sin(time * 2 + (ox + oy + oz) * 2);
 
-					// Add audio influence - make small orb react to snares and mids
-					if (this.audioInitialized) {
-						// Small orb contracts slightly on bass hits
-						warp -= bassValue * 0.05; // Increased impact
-
-						// Add persistent bass memory effect
-						warp -= this.visualBassMemory * 0.05;
-
-						// But expands with snare hits
-						if (this.snareDecay > 0) {
-							warp +=
-								this.lastSnareHit * Math.pow(this.snareDecay / 24, 0.6) * 0.2; // Increased impact, slower decay
-						}
-
-						// Add persistent snare memory effect
-						warp += this.visualSnareMemory * 0.08;
-
-						// // Subtle waves from mid frequencies
-						// warp += midValue * 0.15 * Math.sin(time * 3 + (ox + oy + oz) * 2.5); // Increased impact
-					}
 
 					const nr = r + warp;
 
@@ -532,45 +512,14 @@ export default class ThreeOrb {
 			let rotationSpeed = 0.003; // Slower base rotation for smoother movement
 
 			if (this.audioInitialized) {
-				// Bass impulses cause rotation bursts
-				rotationSpeed += bassValue * 0.06; // Increased impact
 
-				// Add persistent rotation from bass memory
-				rotationSpeed += this.visualBassMemory * 0.02;
-
-				// Add some randomness to rotation on bass hits
-				if (this.bassImpulseDecay > 20) {
-					// Longer effect duration
-					// More controlled rotation on kicks
-					this.orb.rotation.x += (Math.random() - 0.5) * 0.015 * bassValue; // Increased impact
-					this.orb.rotation.z += (Math.random() - 0.5) * 0.015 * bassValue; // Increased impact
-				}
 
 				// Add snare hit rotation effect
 				if (this.snareDecay > 15) {
 					// Longer effect duration
 					rotationSpeed += this.lastSnareHit * 0.04; // Increased impact
-					this.orb.rotation.z += this.lastSnareHit * 0.02; // Increased impact
 				}
 
-				// Add persistent rotation from snare memory
-				rotationSpeed += this.visualSnareMemory * 0.01;
-
-				// Color shifts on strong beats
-				if (this.bassImpulseDecay > 25 || this.snareDecay > 18) {
-					// Longer effect duration
-					// Shift color on strong beats
-					this.colorShift = (this.colorShift + 0.05) % 1.0;
-					if (this.orb && this.orb.material) {
-						// Use a color palette more suited to the song's energy
-						// Shift between cool blues and warmer tones
-						const hue = 0.6 + this.colorShift * 0.2; // Blue to purple range
-						const saturation = 0.6 + bassValue * 0.3;
-						const lightness = 0.5 + trebleValue * 0.2;
-						const color = new THREE.Color().setHSL(hue, saturation, lightness);
-						this.orb.material.color.set(color);
-					}
-				}
 			}
 
 			this.orb.rotation.y += rotationSpeed;
@@ -579,20 +528,6 @@ export default class ThreeOrb {
 			// to prevent drift
 			this.smallOrb.position.set(0, 0, 0);
 			this.smallOrb.rotation.y -= 0.001 + midValue * 0.005; // Increased impact
-
-			// Add some wobble to small orb based on snare hits
-			if (this.snareDecay > 0) {
-				this.smallOrb.rotation.x +=
-					Math.sin(time * 3) * 0.004 * this.lastSnareHit; // Increased impact
-				this.smallOrb.rotation.z +=
-					Math.cos(time * 2) * 0.004 * this.lastSnareHit; // Increased impact
-			}
-
-			// Add persistent wobble from snare memory
-			this.smallOrb.rotation.x +=
-				Math.sin(time * 2) * 0.002 * this.visualSnareMemory;
-			this.smallOrb.rotation.z +=
-				Math.cos(time * 1.5) * 0.002 * this.visualSnareMemory;
 		}
 
 		// Render scene
